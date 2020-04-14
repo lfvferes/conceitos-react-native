@@ -16,7 +16,7 @@ export default function App() {
 
   useEffect(() => {
     async function loadRepositories() {
-      api.get('/repositories').then(response => {
+      await api.get('/repositories').then(response => {
         setRepositories(response.data);
       });
     }
@@ -25,11 +25,15 @@ export default function App() {
   }, []);
 
   async function handleLikeRepository(id) {
-    const { data: newRepository } = await api.post(`/repositories/${id}/like`);
+    try {
+      const { data: newRepository } = await api.post(`/repositories/${id}/like`);
 
-    setRepositories(repositories.map(repository =>
-      repository.id === id ? newRepository : repository
-    ));
+      setRepositories(repositories.map(repository =>
+        repository.id === id ? newRepository : repository
+      ));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
